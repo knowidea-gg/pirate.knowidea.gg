@@ -1,0 +1,74 @@
+<div class="ui inverted vertical footer segment">
+</div>
+
+
+<div class="ui modal" id="hint-modal">
+    <i class="close icon"></i>
+    <div class="header" id="hint-title">
+    </div>
+    <div class="content">
+        <p id="hint-description"></p>
+    </div>
+</div>
+
+<script>
+
+    function hashCode(s) {
+        return Math.abs(s.toLowerCase().trim().split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0));
+    }
+
+
+    async function checkAnswer(answer) {
+        var hash = hashCode(answer)
+        var response = await fetch('/level/' + hash);
+        if (response.ok) {
+            return hash;
+        } else {
+            return false;
+        }
+    }
+
+    async function handleAnswerSubmit() {
+        var ans = $('#answer-input')[0].value
+        $('#submit').addClass('loading disabled');
+        $('.answer-field').removeClass('error')
+        var res = await checkAnswer(ans);
+        $('#submit').removeClass('loading disabled');
+        if (res) {
+            window.location.pathname = '/level/' + res
+        } else {
+            $('.answer-field').addClass('error')
+            $('.answer-field').transition({
+                animation: 'shake'
+            });
+        }
+    }
+
+    function onHintClick(hintName, hintContent) {
+        $('#hint-title')[0].innerHTML = hintName;
+        $('#hint-description')[0].innerHTML = hintContent;
+        $('#hint-modal').modal('show');
+    }
+
+    $(document)
+        .ready(function () {
+
+            // lazy load images
+            $('.image').visibility({
+                type: 'image',
+                transition: 'vertical flip in',
+                duration: 500
+            });
+
+            // show dropdown on hover
+            $('.main.menu  .ui.dropdown').dropdown({
+                on: 'click'
+            });
+            $('#submit').on('click', handleAnswerSubmit)
+            $('#answer-input').on('submit', handleAnswerSubmit)
+            {% if page.console %}
+            console.log("{{page.console}}");
+            {% endif %}
+        })
+        ;
+</script>

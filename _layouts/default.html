@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include head.html %}
+
+<body>
+    <div class="ui borderless fixed main menu">
+        <div class="ui text container">
+            <div class="header item">
+                <a href="/">It begins</a>
+            </div>
+            <a href="#" class="ui right floated dropdown item">
+                Help <i class="dropdown icon"></i>
+                <div class="menu">
+                    {% if page.hints %}
+                    <div class="item">
+                        <i class="dropdown icon"></i>
+                        Hints
+                        <div class="menu">
+                            {% for hint in page.hints %}
+                            <div class="item" onclick="onHintClick('{{hint.name}}','{{hint.description}}')">
+                                {{hint.name}}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="item">Contact Us</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="ui text main container">
+        {{ content }}
+    </div>
+    {% include footer.html %}
+</body>
+
+</html>
