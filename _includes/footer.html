@@ -1,20 +1,16 @@
-<div class="ui inverted vertical footer segment">
-</div>
-
-
 <div class="ui modal" id="hint-modal">
     <i class="close icon"></i>
     <div class="header" id="hint-title">
     </div>
     <div class="content">
-        <p id="hint-description"></p>
+        <h4 id="hint-description"></h4>
     </div>
 </div>
 
 <script>
 
     function hashCode(s) {
-        return Math.abs(s.toLowerCase().trim().split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0));
+        return Math.abs(s.toLowerCase().replace(/[^0-9a-z]/gi, '').trim().split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0));
     }
 
 
@@ -35,11 +31,19 @@
         var res = await checkAnswer(ans);
         $('#submit').removeClass('loading disabled');
         if (res) {
+            gtag("event", "level_end", {
+                level_name: "{{ page.title }}",
+                success: true,
+            });
             window.location.pathname = '/level/' + res
         } else {
             $('.answer-field').addClass('error')
             $('.answer-field').transition({
                 animation: 'shake'
+            });
+            gtag("event", "level_fail", {
+                level_name: "{{ page.title }}",
+                answer: ans
             });
         }
     }
@@ -65,10 +69,31 @@
                 on: 'click'
             });
             $('#submit').on('click', handleAnswerSubmit)
-            $('#answer-input').on('submit', handleAnswerSubmit)
+            $('#answer-input').on('keypress', async function (event) {
+
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    await handleAnswerSubmit();
+                    return false;
+                }
+
+            })
             {% if page.console %}
             console.log("{{page.console}}");
             {% endif %}
         })
         ;
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KLWRP6ENS1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-C3CBYVM5G8');
+
+    gtag("event", "level_start", {
+        level_name: "{{ page.title }}"
+    });
 </script>

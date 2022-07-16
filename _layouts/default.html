@@ -6,9 +6,9 @@
     <div class="ui borderless fixed main menu">
         <div class="ui text container">
             <div class="header item">
-                <a href="/">It begins</a>
+                <a href="/">Try | Know Idea</a>
             </div>
-            <a href="#" class="ui right floated dropdown item">
+            <div class="ui right floated dropdown item">
                 Help <i class="dropdown icon"></i>
                 <div class="menu">
                     {% if page.hints %}
@@ -17,16 +17,16 @@
                         Hints
                         <div class="menu">
                             {% for hint in page.hints %}
-                            <div class="item" onclick="onHintClick('{{hint.name}}','{{hint.description}}')">
-                                {{hint.name}}
+                            <div class="item" onclick="onHintClick('Hint {{forloop.index}}','{{hint}}')">
+                                Hint {{forloop.index}}
                             </div>
                             {% endfor %}
                         </div>
                     </div>
                     {% endif %}
-                    <div class="item">Contact Us</div>
+                    <a class="item" href="mailto:contact@knowidea.gg" target="_blank">Contact Us</a>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
     <div class="ui text main container">
